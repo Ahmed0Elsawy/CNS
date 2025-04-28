@@ -1,0 +1,88 @@
+import numpy as np
+class RNN:
+    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.01):
+        self.Wxh = np.random.randn(hidden_size, input_size) * 0.01
+        self.Whh = np.random.randn(hidden_size, hidden_size) * 0.01
+        self.Why = np.random.randn(output_size, hidden_size) * 0.01
+        self.bh = np.zeros((hidden_size, 1))
+        self.by = np.zeros((output_size, 1))
+        self.hidden_size = hidden_size
+        self.learning_rate = learning_rate
+    def forward(self, inputs):
+        h_states = []
+        outputs = []
+        h_prev = np.zeros((self.hidden_size, 1))
+        h_states.append(h_prev)
+        for x in inputs:
+            h = np.tanh(np.dot(self.Wxh, x) + np.dot(self.Whh, h_prev) + self.bh)
+            y = np.dot(self.Why, h) + self.by
+            p = np.exp(y) / np.sum(np.exp(y))
+            h_states.append(h)
+            outputs.append(p)
+            h_prev = h
+        return h_states, outputs
+    def backward(self, inputs, targets, h_states, outputs):
+        dWxh = np.zeros_like(self.Wxh)
+        dWhh = np.zeros_like(self.Whh)
+        dWhy = np.zeros_like(self.Why)
+        dbh = np.zeros_like(self.bh)
+        dby = np.zeros_like(self.by)
+        loss = 0
+        dh_next = np.zeros_like(h_states[0])
+        for t in reversed(range(len(inputs))):
+            target_index = np.argmax(targets[t])
+            loss += -np.log(outputs[t][target_index, 0])
+            dy = outputs[t].copy()
+            dy[target_index] -= 1
+            dWhy += np.dot(dy, h_states[t + 1].T)
+            dby += dy
+            dh = np.dot(self.Why.T, dy) + dh_next
+            dhraw = (1 - h_states[t + 1] ** 2) * dh
+            dbh += dhraw
+            dWxh += np.dot(dhraw, inputs[t].T)
+            dWhh += np.dot(dhraw, h_states[t].T)
+            dh_next = np.dot(self.Whh.T, dhraw)
+        for dparam in [dWxh, dWhh, dWhy, dbh, dby]:
+            np.clip(dparam, -5, 5, out=dparam)
+        self.Wxh -= self.learning_rate * dWxh
+        self.Whh -= self.learning_rate * dWhh
+        self.Why -= self.learning_rate * dWhy
+        self.bh -= self.learning_rate * dbh
+        self.by -= self.learning_rate * dby
+        return loss
+    def train(self, inputs, targets, num_epochs=100):
+        for epoch in range(num_epochs):
+            h_states, outputs = self.forward(inputs)
+            loss = self.backward(inputs, targets, h_states, outputs)
+            if epoch % 10 == 0:
+                print(f"Epoch {epoch}, Loss: {loss}")
+    def predict(self, inputs):
+        h_states, outputs = self.forward(inputs)
+        predictions = [np.argmax(out) for out in outputs]
+        return predictions
+def one_hot_encode(idx, size):
+    vec = np.zeros((size, 1))
+    vec[idx] = 1
+    return vec
+if __name__ == "__main__":
+    vocab = "abcdefghijklmnopqrstwvxyz"
+    char_to_idx = {ch: i for i, ch in enumerate(vocab)}
+    idx_to_char = {i: ch for i, ch in enumerate(vocab)}
+
+    sequence = "abcdefg"
+    targets_seq = "bcdefgh"
+
+    inputs = [one_hot_encode(char_to_idx[ch], len(vocab)) for ch in sequence]
+    targets = [one_hot_encode(char_to_idx[ch], len(vocab)) for ch in targets_seq]
+
+    input_size = len(vocab)
+    hidden_size = 10
+    output_size = len(vocab)
+
+    rnn = RNN(input_size, hidden_size, output_size, learning_rate=0.1)
+    rnn.train(inputs, targets, num_epochs=100)
+
+    predictions = rnn.predict(inputs)
+    predicted_chars = [idx_to_char[idx] for idx in predictions]
+    print(f"Input sequence: {sequence}")
+    print(f"Predicted next chars: {''.join(predicted_chars)}")
