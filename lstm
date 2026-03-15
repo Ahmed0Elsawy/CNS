@@ -1,0 +1,67 @@
+import numpy as np
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def tanh(x):
+    return np.tanh(x)
+
+
+class LSTM:
+
+    def __init__(self, input_size, hidden_size, output_size):
+
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+
+        self.Wf = np.random.randn(hidden_size, hidden_size + input_size)
+        self.Wi = np.random.randn(hidden_size, hidden_size + input_size)
+        self.Wc = np.random.randn(hidden_size, hidden_size + input_size)
+        self.Wo = np.random.randn(hidden_size, hidden_size + input_size)
+
+        self.bf = np.zeros((hidden_size, 1))
+        self.bi = np.zeros((hidden_size, 1))
+        self.bc = np.zeros((hidden_size, 1))
+        self.bo = np.zeros((hidden_size, 1))
+
+        self.Wy = np.random.randn(output_size, hidden_size)
+        self.by = np.zeros((output_size, 1))
+
+
+    def forward(self, inputs):
+
+        h = np.zeros((self.hidden_size, 1))
+        c = np.zeros((self.hidden_size, 1))
+
+        for x in inputs:
+
+            x = np.array([[x]])
+            combined = np.vstack((h, x))
+
+            f = sigmoid(np.dot(self.Wf, combined) + self.bf)
+            i = sigmoid(np.dot(self.Wi, combined) + self.bi)
+            c_tilde = tanh(np.dot(self.Wc, combined) + self.bc)
+
+            c = f * c + i * c_tilde
+
+            o = sigmoid(np.dot(self.Wo, combined) + self.bo)
+
+            h = o * tanh(c)
+
+        y = np.dot(self.Wy, h) + self.by
+
+        return y, h, c
+
+
+sequence = [1,2,3]
+
+lstm = LSTM(
+    input_size=1,
+    hidden_size=4,
+    output_size=1
+)
+
+prediction, h, c = lstm.forward(sequence)
+
+print("Prediction:", prediction)
