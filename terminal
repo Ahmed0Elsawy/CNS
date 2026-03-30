@@ -1,103 +1,126 @@
-uname — System Info
+# ===============================
+# Ubuntu Commands (Section 3)
+# ===============================
 
-uname — show OS name
-uname -a — print all system info (machine name, kernel, version, etc.)
-uname -n — show node hostname
+# uname — System Info
+uname        # show OS name
+uname -a     # print all system info (machine name, kernel, version, etc.)
+uname -n     # show node hostname
 
-cal / date — Date & Calendar
+# cal / date — Date & Calendar
+cal              # display current year calendar
+cal 5 2004       # display calendar for a specific month/year
+sudo apt install ncal   # install cal (newer Ubuntu versions)
+date             # print current system date and time
 
-cal — display current year calendar
-cal 5 2004 — display calendar for a specific month/year
-sudo apt install ncal — install cal (newer Ubuntu versions)
-date — print current system date and time
+# man — Manual Pages
+man <command>        # open full manual (e.g. man mv)
+man -f <command>     # show short description
+man -k <keyword>     # search commands by keyword
 
-man — Manual Pages
+# help / --help
+<command> --help     # show short usage description
+<command> -h         # same (not always supported)
 
-man <command> — open full manual for a command (e.g. man mv)
-man -f <command> — show short description
-man -k <keyword> — search commands by keyword
+# pwd — Print Working Directory
+pwd                 # show current directory path
 
-help / --help
+# whoami — Current User
+whoami              # display current logged-in username
 
-<command> --help — show short usage description
-<command> -h — same (use --help first, as -h may not always mean help)
+# cd — Change Directory
+cd /                # navigate to root
+cd                  # go to home directory
+cd ~                # go to home directory
+cd ..               # go up one level
+cd -                # go to previous directory
+cd /var/www         # navigate to a specific path
+cd ~/Desktop        # navigate to Desktop
 
-pwd — Print Working Directory
+# ls — List Files
+ls                          # list files in current directory
+ls ~                        # list home directory files
+ls /home/user1/dir1         # list files in a specific path
+ls -a                       # include hidden files
+ls -l                       # long listing
+ls -F                       # append / to directories
+ls -ld <dirname>            # info about specific directory
+ls -R                       # recursive listing
+ls -lh                      # human-readable sizes
+ls -d                       # info about selected file/dir
 
-pwd — show current directory path
+# df / du — Disk Usage
+df              # show free disk space
+df -h           # human-readable
+du <dir>        # space used by directory
+du -sh          # human-readable total size
 
-whoami — Current User
+# mkdir / touch — Create Files & Folders
+mkdir folder_name                         # create folder
+mkdir -p folder1/folder2/folder3         # create nested folders
+touch filename.txt                        # create file
 
-whoami — display current logged-in username
+# cat — View / Create Files
+cat file-name                     # display contents
+cat file1 file2                   # view multiple files
+cat > file-name                   # create file (Ctrl+D to save)
+cat -n file-name                  # show with line numbers
+cat file1 > file2                 # overwrite file2
+cat file1 >> file2                # append to file2
+cat file1 file2 file3 > file4     # merge files
 
-cd — Change Directory
+# cp — Copy Files/Directories
+cp source target          # copy file
+cp -i source target       # prompt before overwrite
+cp -r source target       # copy directory
 
-cd / — navigate to root
-cd or cd ~ — go to home directory
-cd .. — go up one level
-cd - — go to previous directory
-cd /var/www — navigate to a specific path
-cd ~/Desktop — navigate to Desktop
+# mv — Move / Rename
+mv source target          # move or rename
+mv -i source target       # prompt before overwrite
 
-ls — List Files
+# rm / rmdir — Remove Files/Directories
+rm file_name              # delete file
+rmdir directory_name      # remove empty directory
+rm -r directory_name      # remove non-empty directory
+rm -p                     # remove directory and ancestors
+rm -i                     # prompt before deleting
 
-ls — list files in current directory
-ls ~ — list home directory files
-ls /home/user1/dir1 — list files in a specific path
-ls -a — include hidden files (starting with .)
-ls -l — long listing (size, date, owner, permissions)
-ls -F — append / to directories
-ls -ld <dirname> — info about a specific directory
-ls -R — recursive long listing
-ls -lh — human-readable sizes
-ls -d — info about selected directory/file
+# head / tail — View File Lines
+head filename                 # first 10 lines
+head -n <num> filename        # first N lines
+tail filename                 # last 10 lines
+tail -n <num> filename        # last N lines
+tail -n+<num> filename        # from line N
+# إنشاء مجلد باسم AhmedAyman
+mkdir AhmedAyman
 
-df / du — Disk Usage
+# الدخول للمجلد
+cd AhmedAyman
 
-df — show free disk blocks
-df -h — human-readable (MB/GB)
-du <dir> — total space used by a directory tree
-du -sh — human-readable size of parent directory
+# إنشاء ملف داخله
+touch AhmedAyman.txt
 
-mkdir / touch — Create Files & Folders
+# إنشاء كذا ملف
+touch file1_AhmedAyman.txt file2_AhmedAyman.txt
 
-mkdir folder_name — create a folder
-mkdir -p folder1/folder2/folder3 — create nested folders
-touch filename.txt — create a file (or update timestamp)
+# إنشاء مجلدات متداخلة بنفس الاسم
+mkdir -p AhmedAyman/folder1_AhmedAyman/folder2_AhmedAyman
 
-cat — View / Create Files
+# إنشاء ملف وكتابة محتوى فيه
+cat > AhmedAyman.txt
+# اكتب اللي عايزه هنا
+# اضغط Ctrl + D للحفظ
 
-cat file-name — display file contents
-cat file1 file2 — view multiple files
-cat > file-name — create a new file (Ctrl+D to save)
-cat -n file-name — display with line numbers
-cat file1 > file2 — redirect output to a new file (overwrite)
-cat file1 >> file2 — append to existing file
-cat file1 file2 file3 > file4 — merge multiple files
+# نسخ الملف
+cp AhmedAyman.txt copy_AhmedAyman.txt
 
-cp — Copy Files/Directories
+# إعادة تسمية الملف
+mv AhmedAyman.txt new_AhmedAyman.txt
 
-cp source target — copy a file
-cp -i source target — prompt before overwrite
-cp -r source target — copy directory including subdirectories
+# حذف الملف
+rm new_AhmedAyman.txt
 
-mv — Move / Rename
+# حذف المجلد
+cd ..
+rm -r AhmedAyman
 
-mv source target — move or rename
-mv -i source target — prompt before overwrite
-
-rm / rmdir — Remove Files/Directories
-
-rm file_name — delete a file
-rmdir directory_name — remove an empty directory
-rm -r directory_name — remove a non-empty directory
-rm -p — remove directory and its ancestors
-rm -i — prompt before deleting
-
-head / tail — View File Lines
-
-head filename — show first 10 lines
-head -n <num> filename — show first N lines
-tail filename — show last 10 lines
-tail -n <num> filename — show last N lines
-tail -n+<num> filename — show lines starting from line N
